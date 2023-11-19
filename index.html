@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Singular vs Plural Game</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(to right, #3498db, #2c3e50);
+        color: #000000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      #game-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        text-align: center;
+      }
+
+      .question-container {
+        margin-bottom: 20px;
+      }
+
+      .options-container {
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .option {
+        padding: 10px;
+        border: 2px solid #000000;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #fff;
+        color: #000000;
+      }
+
+      /* Modal styles */
+      #modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <h2>Singular vs Plural</h2>
+      <div class="question-container" id="question-container">
+        <p id="question-text"></p>
+      </div>
+
+      <div class="options-container" id="options-container">
+        <!-- Options will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal">
+      <p id="modal-message"></p>
+      <button onclick="closeModal()">OK</button>
+    </div>
+
+    <script>
+      let score = 0;
+      let currentQuestion = 0;
+      const questions = [
+        { text: "I ( work - works ) in the shop every day.", options: ["work", "works"], answer: "work" },
+        { text: "He ( play - plays ) football every evening.", options: ["play", "plays"], answer: "plays" },
+        { text: "We ( cook - cooks) delicious meal at 7 PM.", options: ["cook", "cooks"], answer: "cook" },
+        { text: "She ( run - runs) in the park.", options: ["run", "runs"], answer: "runs" },
+        { text: "Children (play - plays ) together.", options: ["play", "plays"], answer: "play" },
+        { text: "She ( write - writes ) homework.", options: ["write", "writes"], answer: "writes" },
+        { text: "He ( help - helps )in gardening.", options: ["help", "helps"], answer: "helps" },
+        { text: "They (sing - sings ) songs. ", options: ["sing", "sings"], answer: "sing" },
+        { text: "You ( like - likes ) strawberries.", options: ["like", "likes"], answer: "like" },
+        { text: "Sara ( play - plays ) the guitar.", options: ["play", "plays"], answer: "plays" },
+        { text: "My sister ( walk - walks ) to school everyday.", options: ["walk", "walks"], answer: "walks" },
+        {
+          text: "Ahmed and Salim ( talk -talks ) about different topics every evening.",
+          options: ["talk", "talks"],
+          answer: "talk",
+        },
+        // Add more questions following the same structure
+      ];
+
+      function displayQuestion() {
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+
+        if (currentQuestion < questions.length) {
+          questionText.textContent = questions[currentQuestion].text;
+
+          // Clear previous options
+          optionsContainer.innerHTML = "";
+
+          // Dynamically insert new options
+          questions[currentQuestion].options.forEach((option) => {
+            const optionElement = document.createElement("div");
+            optionElement.classList.add("option");
+            optionElement.textContent = option;
+            optionElement.onclick = function () {
+              checkAnswer(option);
+            };
+            optionsContainer.appendChild(optionElement);
+          });
+        } else {
+          // Game Over: Display the final score or redirect to a new page
+          showModal(`Game Over! Your Score: ${score} out of 120`);
+        }
+      }
+
+      function showModal(message) {
+        const modal = document.getElementById("modal");
+        const modalMessage = document.getElementById("modal-message");
+        modalMessage.textContent = message;
+        modal.style.display = "block";
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "none";
+
+        // Move to the next question or end the game
+        currentQuestion++;
+        displayQuestion();
+      }
+
+      function checkAnswer(userChoice) {
+        const correctAnswer = questions[currentQuestion].answer;
+
+        if (userChoice === correctAnswer) {
+          score += 10;
+          showModal("Correct! You earned 10 points.");
+        } else {
+          showModal("Incorrect! No points earned.");
+        }
+      }
+
+      // Initial question display
+      displayQuestion();
+    </script>
+  </body>
+</html>
